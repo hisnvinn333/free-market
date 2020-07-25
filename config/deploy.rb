@@ -1,5 +1,5 @@
 # capistranoのバージョンを記載。固定のバージョンを利用し続け、バージョン変更によるトラブルを防止する
-lock '3.12.1'
+lock '3.14.1'
 
 # Capistranoのログの表示に利用する
 set :application, 'free-market'
@@ -29,5 +29,15 @@ after 'deploy:publishing', 'deploy:restart'
 namespace :deploy do
   task :restart do
     invoke 'unicorn:restart'
+  end
+end
+
+task :db_seed do
+  on roles(:db) do |host|
+    with rails_env: fetch(:rails_env) do
+      within current_path do
+        execute :bundle, :exec, :rake, 'db:seed'
+      end
+    end
   end
 end
