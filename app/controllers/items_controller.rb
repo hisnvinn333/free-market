@@ -5,15 +5,15 @@ class ItemsController < ApplicationController
 
   def new
     @item = Item.new  ## 追加
-    3.times do
-      @item.images.build
-    end
+    # 3.times do
+    #   @item.images.build
+    # end
+    @item.images.build
     render layout: 'no_menu' # レイアウトファイルを指定
   end
 
   def create
     @item = Item.new(item_params)
-    binding.pry
     if @item.save
       redirect_to root_path, notice: "出品に成功しました"
     else
