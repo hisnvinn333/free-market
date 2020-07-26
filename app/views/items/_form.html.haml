@@ -12,25 +12,23 @@
         最大5枚までアップロードできます。
         #selected-item-images
           -# 商品編集の際はプレビューを表示
-          - if false
-            .item-image{data: {index: 0}}
-              = image_tag "", class: "item-image__image"
-              .item-image__buttons
-                .item-image__buttons--edit
-                  編集
-                .item-image__buttons--delete
-                  削除
+          - @item.images.each_with_index do |image, i|
+            -if image.persisted?
+              .item-image{data: {index: i}}
+                = image_tag image.src.url, class: "item-image__image"
+                .item-image__buttons
+                  .item-image__buttons--edit
+                    編集
+                  .item-image__buttons--delete
+                    削除
           #select-image-button
             #select-image-button__text
               クリックしてファイルをアップロード
     #image-file-fields
       = f.fields_for :images do |image|
-        %br
-        = image.object.src
-        %br
-        = image.file_field :src, accept: "image/*", class: "new-item-image", style: "display: block;",data: {index: image.index}
-        - if image.object.persisted? 
-          = image.check_box :_destroy, include_hidden: false, style: "display: block;"
+        = image.file_field :src, accept: "image/*", class: "new-item-image", data: {index: image.index}
+        - if image.object.persisted?
+          = image.check_box :_destroy, include_hidden: false
   .block.horizontal-padding-5
     .input-field
       .input-field-main
@@ -71,19 +69,19 @@
         .input-field-title__text
           配送について
       .input-field-main
-        = f.label :delivary_fee_payer, "配送料の負担"
+        = f.label :delivery_fee_payer, "配送料の負担"
         %span.required-true
           必須
         %br
-        = f.select :delivary_fee_payer, Item.delivery_fee_payers.keys, {include_blank: "---"}
+        = f.select :delivery_fee_payer, Item.delivery_fee_payers.keys, {include_blank: "---"}
         .error-field{data:{column_name: "delivery_fee_payer"}}
         %br
         .input-field-main__delivery-method
-          = f.label :delivary_method, "配送の方法"
+          = f.label :delivery_method, "配送の方法"
           %span.required-true
             必須
           %br
-          = f.select :delivary_method, Item.delivery_methods.keys, {include_blank: "---"}
+          = f.select :delivery_method, Item.delivery_methods.keys, {include_blank: "---"}
           %br
           .error-field{data:{column_name: "delivery_method"}}
         = f.label :prefecture_id, "発送元の地域"
@@ -93,11 +91,11 @@
         = f.collection_select :prefecture_id, Prefecture.all, :id, :name, {include_blank: "---"}, required: true, placeholder: "発送元の地域"
         .error-field{data:{column_name: "delivery_agency"}}
         %br
-        = f.label :delivary_days, "発送までの日数"
+        = f.label :delivery_days, "発送までの日数"
         %span.required-true
           必須
         %br
-        = f.select :delivary_days, Item.delivery_days.keys, {include_blank: "---"}
+        = f.select :delivery_days, Item.delivery_days.keys, {include_blank: "---"}
         .error-field{data:{column_name: "delivery_days"}}
   .block.horizontal-padding-5
     .input-field
