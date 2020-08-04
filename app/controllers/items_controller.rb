@@ -1,6 +1,6 @@
 class ItemsController < ApplicationController
-  skip_before_action :authenticate_user!, only: [:index]
-  before_action :set_item, only: [:edit, :update, :destroy]
+  skip_before_action :authenticate_user!, only: [:index, :show]
+  before_action :set_item, only: [:edit, :show, :update, :destroy]
   before_action :user_is_not_seller, only: [:edit, :update, :destroy]
 
   def index
@@ -41,6 +41,10 @@ class ItemsController < ApplicationController
     @item = Item.find(params[:id])
     @item.images.build
     render layout: 'no_menu' # レイアウトファイル指定
+  end
+
+  def show
+    
   end
 
 
