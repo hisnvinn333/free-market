@@ -7,6 +7,12 @@ class Item < ApplicationRecord
   has_many :images, dependent: :destroy  ## 追加
   accepts_nested_attributes_for :images, allow_destroy: true, update_only: true  
 
+  scope :new_items, -> { order("created_at DESC").limit(4) }
+
+  def self.search_by_categories(categories)
+    return Item.where(category: categories).includes(:images)
+  end
+
 
 
   extend ActiveHash::Associations::ActiveRecordExtensions
